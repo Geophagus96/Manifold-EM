@@ -6,6 +6,7 @@ require(mclust)
 require(scatterplot3d)
 sourceCpp('manifoldEM.cpp')
 
+##Original Data Construction
 mean1 = c(-2,2)
 mean2 = c(2,2)
 mean3 = c(-2,-2)
@@ -46,6 +47,7 @@ ggplot()+
   xlim(-5,5)+
   ylim(-5,5)
 
+##Manifold Data Construction 
 r = (max(xall[,1])-min(xall[,1])+2)/(2*pi)
 theta = (xall[,1]-min(xall[,1]))/r
 x = r*cos(theta)
@@ -54,8 +56,10 @@ z = xall[,2]
 manifold_data = cbind(x,y,z)
 scatterplot3d(x,y,z,color = c(rep(1,nrow(x1)),rep(2,nrow(x2)),rep(3,nrow(x3)),rep(4,nrow(x4))))
 
+##Nearest Neighbour Graph Construction
 knng = kNN(manifold_data,5)
 
+##Geodesic Distance Approximation using Dijkstra's Method
 require(igraph)
 g <- make_empty_graph() %>%
   add_vertices(nrow(xall)) 
@@ -66,7 +70,7 @@ for(i in 1:nrow(xall)){
 }
 pathdist = distances(g,v=V(g),to = V(g),mode ='all',algorithm = 'dijkstra')
 
-
+##Manifold-EM Clustering 
 cats = cats_EM(pathdist,c(10,120,230,340),2,4,10)
 ggplot()+
   geom_point(aes(x = as.vector(xall[which(cats==0),1]),y = as.vector(xall[which(cats ==0),2]), color = 'red'))+
@@ -76,6 +80,7 @@ ggplot()+
   xlim(-5,5)+
   ylim(-5,5)
 
+##EM Clustering 
 fit_em = Mclust(manifold_data,G=4)
 cats_std = fit_em$classification
 ggplot()+
