@@ -10,6 +10,7 @@ using namespace arma;
 //[[Rcpp::depends(RcppArmadillo)]]
 
 //[[Rcpp::export]]
+/*assigning all points to the initial point that is the nearest*/
 uvec nnc(const mat&dist){
   int n = dist.n_cols;
   int k = dist.n_rows;
@@ -28,6 +29,7 @@ uvec nnc(const mat&dist){
 }
 
 //[[Rcpp::export]]
+/*mean estimation for the M-Step*/
 int mean_est(const mat&dist, const uvec&num_seq){
   int k = dist.n_cols;
   vec ones(k,fill::ones);
@@ -38,6 +40,7 @@ int mean_est(const mat&dist, const uvec&num_seq){
 }
 
 //[[Rcpp::export]]
+/*Variance estimation for the M-Step*/
 double variance_est(const mat&dist, const int&center,const uvec&num_seq){
   mat center_id = dist.row(center);
   mat center_dist = center_id.cols(num_seq);
@@ -48,6 +51,7 @@ double variance_est(const mat&dist, const int&center,const uvec&num_seq){
 
 
 //[[Rcpp::export]]
+/*The manifold EM algorithm returing a indicator vector of which cluster each sample belonging to*/
 uvec cats_EM(const mat&dist, const uvec&initials, const int & manifolds, const int &categories, const int &max_iter){
   int n = dist.n_cols;
   uvec cats = nnc(dist.rows(initials));
