@@ -10,6 +10,7 @@ using namespace arma;
 //[[Rcpp::depends(RcppArmadillo)]]
 
 //[[Rcpp::export]]
+/*assigning all points to the initial point that is the nearest*/
 uvec nnc(const mat&dist){
   int n = dist.n_cols;
   int k = dist.n_rows;
@@ -20,26 +21,28 @@ uvec nnc(const mat&dist){
     for (int j = 1; j < k; j++){
       if (disti(j)<disti(c)){
         c = j;
-        }
-      cate(i) = c;
       }
+      cate(i) = c;
+    }
   }
   return cate;
 }
 
 //[[Rcpp::export]]
-uvec mean_est(const mat&dist, const uvec&num_seq){
+/*mean estimation for the M-Step*/
+int mean_est(const mat&dist, const uvec&num_seq){
   int k = dist.n_cols;
   vec ones(k,fill::ones);
   vec sumdist = dist*ones;
   uvec center_ind = find(sumdist == min(sumdist));
-  uvec center = num_seq(center_ind);
+  int center = num_seq(center_ind(0));
   return center;
 }
 
 //[[Rcpp::export]]
-double variance_est(const mat&dist, const uvec&center,const uvec&num_seq){
-  mat center_id = dist.row(center(0));
+/*Variance estimation for the M-Step*/
+double variance_est(const mat&dist, const int&center,const uvec&num_seq){
+  mat center_id = dist.row(center);
   mat center_dist = center_id.cols(num_seq);
   mat c_var = pow(center_dist,2);
   double sigma = mean(mean(c_var));
@@ -48,6 +51,7 @@ double variance_est(const mat&dist, const uvec&center,const uvec&num_seq){
 
 
 //[[Rcpp::export]]
+/*The manifold EM algorithm returing a indicator vector of which cluster each sample belonging to*/
 uvec cats_EM(const mat&dist, const uvec&initials, const int & manifolds, const int &categories, const int &max_iter){
   int n = dist.n_cols;
   uvec cats = nnc(dist.rows(initials));
@@ -60,8 +64,8 @@ uvec cats_EM(const mat&dist, const uvec&initials, const int & manifolds, const i
       uvec subsign = find(cats == k);
       mat subdist1 = dist.cols(subsign);
       mat subdist2 = subdist1.rows(subsign);
-      uvec center = mean_est(subdist2,subsign);
-      centers(k) = center(0);
+      int center = mean_est(subdist2,subsign);
+      centers(k) = center;
       sigmas(k) = variance_est(dist,center,subsign);
     }
     mat subdist = dist.cols(centers);
@@ -72,9 +76,9 @@ uvec cats_EM(const mat&dist, const uvec&initials, const int & manifolds, const i
       cats(i) = cat(0);
     }
     /*for (int h = 0 ;h < categories; h++){
-      uvec sumi = find(cats == h);
-      proportions(h) = sumi.n_elem/double(n);    }
-  }*/
-  }  
+    uvec sumi = find(cats == h);
+    proportions(h) = sumi.n_elem/double(n);    }
+}*/
+    }  
   return cats;
-}  
+  }  
