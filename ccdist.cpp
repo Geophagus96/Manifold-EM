@@ -1,7 +1,6 @@
 #include <RcppArmadillo.h>
 #include <math.h>
 #include <iostream>
-#include <array>
 
 using namespace Rcpp;
 using namespace arma;
