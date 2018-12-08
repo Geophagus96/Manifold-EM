@@ -1,22 +1,39 @@
 require('dbscan')
 require(igraph)
 require(Rcpp)
-sourceCpp('manifoldEM.cpp')
+sourceCpp('manifoldEMmod.cpp')
 sourceCpp('nnrank.cpp')
 sourceCpp('ccdist.cpp')
 sourceCpp('geodist.cpp')
 
-
 Manifold_EM = function(manifold_data, n_manifolds, knns, categories,max_iter){
+  g = graph_construction(manifold_data, knns)
+  
+  nnrank = sigpointsampling(g$knns$id)
+  initp = initialpointsamp(g$knns$id,nnrank,categories)
+  geodist = geodist(g$g)
+  cats = list();
+  cats$cate = cats_EM(geodist,initp,n_manifolds,categories,max_iter)
+  cats$initials = initp
+  return(cats)
+}
+
+graph_construction = function(manifold_data, knns){
   knng = kNN(manifold_data,knns)
   g <- make_empty_graph() %>%
-    add_vertices(nrow(xall)) 
-  for(i in 1:nrow(xall)){
+    add_vertices(nrow(manifold_data)) 
+  for(i in 1:nrow(manifold_data)){
     for(j in 1:knns){
       g = g+edges(c(i,knng$id[i,j]),weight = knng$dist[i,j])
     }
   }
-  
+  graph_info = list()
+  graph_info$g = g
+  graph_info$knns = knng
+  return(graph_info)
+}
+
+geodist = function(g){
   ccs = clusters(g)
   if (ccs$no == 1){
     geodist = distances(g,v=V(g),to = V(g),mode ='all',algorithm = 'dijkstra')
@@ -38,12 +55,6 @@ Manifold_EM = function(manifold_data, n_manifolds, knns, categories,max_iter){
     }
     ccdis = ccdis + t(ccdis)
     geodist = geodist(pathdist,l2dist,ccdis,ccrep,ccs$membership)
-    
   }
-  nnrank = sigpointsampling(knng$id)
-  initp = initialpointsamp(knng$id,nnrank,categories)
-  cats = list();
-  cats$cate = cats_EM(geodist,initp,n_manifolds,categories,max_iter)
-  cats$initials = initp
-  return(cats)
+  return(geodist)
 }
