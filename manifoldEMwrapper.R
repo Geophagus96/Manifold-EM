@@ -1,7 +1,7 @@
 require('dbscan')
 require(igraph)
 require(Rcpp)
-sourceCpp('manifoldEMmod.cpp')
+sourceCpp('manifoldEM.cpp')
 sourceCpp('nnrank.cpp')
 sourceCpp('ccdist.cpp')
 sourceCpp('geodist.cpp')
