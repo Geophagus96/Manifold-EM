@@ -1,0 +1,53 @@
+\documentclass[letterpaper]{article}
+\title{UML Project Outline}
+\author{Linyun He}
+\date{December 4, 2018}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{algorithm2e}
+\usepackage{algorithmicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{url}
+
+
+
+\begin{document}
+\maketitle
+
+\section{Isomap and EM on Manifolds}
+\subsection*{Outline}
+First determine the distance matrix through k-NN method or NNG ($\epsilon$-nearest-neighbor). Secondly implement an adjusted EM algorithm and compare the outcome with that of a classic EM. The adjusted part is in the M-step, we assign the medoid of the data cluster to the "mean" parameter instead of sample means. Details can be found at 
+\href{https://github.com/Geophagus96/Manifold-EM/blob/master/doc/EMmanifold.pdf}{\textbf{EMmanifold.pdf}}\cite{adEM}.
+
+\subsection*{Data Sets for testing}
+Test on a toy example has been finished. The adjusted algorithm beats the classic EM, but it's important to point out that the overall performance is hugely affected by the choice of intial points in EM algorithm. In other words, the choice of $k$ or $\epsilon$ is the key. \par
+Further test on Iris or Mnist. (The list may be updated.)
+
+\section{Rank-based distance extension}
+\subsection{Rank-based distance to select initial points}
+First filter the data set and pick out the "important" or representative points. With a relatively big $k$, we set another threshold $s$, and define a data node important if it's in more than s other points' k-nearest neighbourhood. We can similarly set such a definition in an $\epsilon$-NN graph.\par
+Secondly, we can merge some near "important" node to obtain a set of clusters and "centers". Set these points as initial center guess in EM algorithm may help improve the outcome. \par
+It's necessary to note that this paper \href{https://ieeexplore.ieee.org/document/5995680/figures#figures}{\textbf{A rank-order distance based clustering algorithm for face tagging}}\cite{rankdface} provides much inspiration. A similar $D^R$ and $D^N$ distance can also help to choose the initial representatives and inspires us to put forward the next potential direction.
+
+\subsection{$D^N$-like distance and merge algorithm}
+Check some new distance if it can serve well to tell us whether a node is representative. Or to do some generalization of distances in other fields to this problem. To note the manifold setting would be abandoned in background as in this method.
+
+\section{Max-cut or min-cut extension}
+The discussion in this part still focuses on the selection of initial presentative points. \par
+First to construct the graph by defining some new weight on each edges, while the weights reflect the similarity of two nodes. The $D^R$ and $D^N$ are good examples. After the construction of nearest neighbor graph, we may implement a k min cut algorithm on this graph, which provides k clusters with minimized sum of between-cluster distances. This can be interpreted as k groups with the minimized similarity. Some known approximate algorithms have help us solve the k min cut problem.\par
+We can also choose the distance to present the differences between two data points, and thus the key part is to solve a max cut problem. Since it's NP-complete, we may not have a promising prospect, but at least this method worth a try.
+
+\begin{thebibliography}{}
+    \bibitem{adEM}
+	EMmanifold.pdf, \\ https://github.com/Geophagus96/Manifold-EM/blob/master/doc/EMmanifold.pdf.
+	
+	\bibitem{rankdface}
+	Zhu, Chunhui, Fang Wen, and Jian Sun. 
+	"A rank-order distance based clustering algorithm for face tagging." Computer Vision and Pattern Recognition (CVPR), 2011 IEEE Conference on. IEEE, 2011.
+\end{thebibliography}
+
+\end{document} 
