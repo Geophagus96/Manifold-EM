@@ -72,8 +72,8 @@ for(i in 1:nrow(xall)){
 pathdist = distances(g,v=V(g),to = V(g),mode ='all',algorithm = 'dijkstra')
 
 ##Manifold-EM Clustering 
-# cats = cats_EM(pathdist,c(100,300,500,700),3,4,5)
-cats = cats_EM(pathdist,c(25,70,120),3,3,5)
+cats = cats_EM(pathdist,c(100,300,500,700),3,4,5)
+#cats = cats_EM(pathdist,c(25,70,120),3,3,5)
 ggplot()+
   geom_point(aes(x = as.vector(xall[which(cats==0),1]),y = as.vector(xall[which(cats ==0),2]), color = 'red'))+
   geom_point(aes(x = as.vector(xall[which(cats == 1),1]),y = as.vector(xall[which(cats == 1),2]), color = 'green'))+
