@@ -10,8 +10,8 @@ sourceCpp('geodist.cpp')
 Manifold_EM = function(manifold_data, n_manifolds, knns, categories,max_iter){
   knng = kNN(manifold_data,knns)
   g <- make_empty_graph() %>%
-    add_vertices(nrow(xall)) 
-  for(i in 1:nrow(xall)){
+    add_vertices(nrow(manifold_data)) 
+  for(i in 1:nrow(manifold_data)){
     for(j in 1:knns){
       g = g+edges(c(i,knng$id[i,j]),weight = knng$dist[i,j])
     }
