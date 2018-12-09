@@ -18,8 +18,8 @@ until there are exactly k left (we assume that there are k clusters)
 uvec IPwithmerge(const mat&knng, const mat&distm, const uvec&nnnums, const int&cats, const int&tresh){
   /*
   cats: number of clusters
-  tresh: treshold for labeling a point as important, i.e. with many neighbors
-  (number of neighbors)
+  tresh: treshold for labeling a point as important, i.e. with more than a certain number of neighbors
+  output a uvec, denoting the indices of the centers
   */
   int n = knng.n_rows;
   int del;
@@ -46,7 +46,6 @@ uvec IPwithmerge(const mat&knng, const mat&distm, const uvec&nnnums, const int&c
     else{
       del = nodencol;
     }
-    cout << del << endl;
     tempdistm.shed_row(del);
     tempdistm.shed_col(del);
     imnode_ind = imnode_ind(find(imnode_ind != imnode_ind(del)));

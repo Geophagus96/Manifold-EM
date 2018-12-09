@@ -5,7 +5,7 @@ sourceCpp('manifoldEM.cpp')
 sourceCpp('nnrank.cpp')
 sourceCpp('ccdist.cpp')
 sourceCpp('geodist.cpp')
-sourceCpp('nnrank_merge.cpp')
+sourceCpp('nnmerge.cpp')
 
 Manifold_EM = function(manifold_data, n_manifolds, knns, categories, max_iter, method, thresh){
   g = graph_construction(manifold_data, knns)
@@ -18,7 +18,7 @@ Manifold_EM = function(manifold_data, n_manifolds, knns, categories, max_iter, m
   }
   else{
     initp = IPwithmerge(g$knns$id, gdm, nnrank, categories, thresh)
-    # with node merge method
+    # with node merge method (stochastically)
   }
   
   cats = list();
