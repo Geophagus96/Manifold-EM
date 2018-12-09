@@ -11,6 +11,9 @@ using namespace std;
 //[[Rcpp::depends(RcppArmadillo)]]
 //[[Rcpp::export]]
 
+/*
+ The function of calculating the distance between different connected components.
+ */
 uvec minccdist(const mat & ccdist){
   uvec x = {0,0};
   double minmum = ccdist(0,0);
