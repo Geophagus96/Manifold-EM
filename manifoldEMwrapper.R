@@ -6,6 +6,8 @@ sourceCpp('nnrank.cpp')
 sourceCpp('ccdist.cpp')
 sourceCpp('geodist.cpp')
 sourceCpp('nnmerge.cpp')
+sourceCpp('nnmindistmerge.cpp')
+sourceCpp('nnmaxdistmerge.cpp')
 
 Manifold_EM = function(manifold_data, n_manifolds, knns, categories, max_iter, method, thresh){
   g = graph_construction(manifold_data, knns)
@@ -16,9 +18,17 @@ Manifold_EM = function(manifold_data, n_manifolds, knns, categories, max_iter, m
     initp = initialpointsamp(g$knns$id,nnrank,categories)
     # greedy nn-rank
   }
-  else{
+  else if (method == 2){
     initp = IPwithmerge(g$knns$id, gdm, nnrank, categories, thresh)
     # with node merge method (stochastically)
+  }
+  else if (method == 3){
+    initp = IPmindistmerge(g$knns$id, gdm, nnrank, categories, thresh)
+    # with node merge method (min distance)
+  }
+  else{
+    initp = IPmaxdistmerge(g$knns$id, gdm, nnrank, categories, thresh)
+    # with node merge method (max distance)
   }
   
   cats = list();
