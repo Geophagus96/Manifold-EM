@@ -96,6 +96,13 @@ ggplot()+
 
 ## check the true percentage of each cluster
 summary(as.factor(label_data == cats))
-
+# visualization
+dim2_matrix = layout_with_fr(g)
+colnames(dim2_matrix) <- c("x1", "x2")
+newlabel <- as.factor(spec)
+originlabel <- as.factor(label_data)
+vis_matrix = cbind(dim2_matrix, newlabel, originlabel)
+ggplot(as.data.frame(vis_matrix), aes(x = x1, y = x2, colour = as.factor(newlabel))) + 
+  geom_point(shape = originlabel)
 
 
