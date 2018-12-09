@@ -21,9 +21,9 @@ uvec IPmindistmerge(const mat&knng, const mat&distm, const uvec&nnnums, const in
   */
   int n = knng.n_rows;
   int del;
-  double mindist;    
+  double mindist;  
   uvec nodeind;
-  vec distsum = sum(distm);
+  colvec distsum = sum(distm, 1);
 
   uvec imnode_ind = find(nnnums >= tresh);
   int imnode_num = imnode_ind.n_elem;

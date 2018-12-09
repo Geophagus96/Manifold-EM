@@ -5,7 +5,7 @@ sourceCpp('manifoldEM.cpp')
 sourceCpp('nnrank.cpp')
 sourceCpp('ccdist.cpp')
 sourceCpp('geodist.cpp')
-sourceCpp('nnmerge.cpp')
+sourceCpp('nnstomerge.cpp')
 sourceCpp('nnmindistmerge.cpp')
 sourceCpp('nnmaxdistmerge.cpp')
 
@@ -14,12 +14,13 @@ Manifold_EM = function(manifold_data, n_manifolds, knns, categories, max_iter, m
   
   nnrank = sigpointsampling(g$knns$id)
   gdm = gdmgenerator(g$g)#geodesic distance matrix generator
+  
   if (method == 1){
     initp = initialpointsamp(g$knns$id,nnrank,categories)
     # greedy nn-rank
   }
   else if (method == 2){
-    initp = IPwithmerge(g$knns$id, gdm, nnrank, categories, thresh)
+    initp = IPstomerge(g$knns$id, gdm, nnrank, categories, thresh)
     # with node merge method (stochastically)
   }
   else if (method == 3){

@@ -24,7 +24,7 @@ uvec IPmaxdistmerge(const mat&knng, const mat&distm, const uvec&nnnums, const in
   double maxdist;    
   uvec nodeind;
   uvec nodeind2;
-  vec distsum = sum(distm);
+  colvec distsum = sum(distm, 1);
 
   uvec imnode_ind = find(nnnums >= tresh);
   int imnode_num = imnode_ind.n_elem;

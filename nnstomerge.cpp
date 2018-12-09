@@ -15,7 +15,7 @@ Selecting initial guess for EM algorithm by merging the important nodes
 until there are exactly k left (we assume that there are k clusters)
 */
 //[[Rcpp::export]]
-uvec IPwithmerge(const mat&knng, const mat&distm, const uvec&nnnums, const int&cats, const int&tresh){
+uvec IPstomerge(const mat&knng, const mat&distm, const uvec&nnnums, const int&cats, const int&tresh){
   /*
   cats: number of clusters
   tresh: treshold for labeling a point as important, i.e. with more than a certain number of neighbors

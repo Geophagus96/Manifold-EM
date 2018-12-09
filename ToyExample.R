@@ -16,8 +16,7 @@ Toyplots$initg
 Toymerge2 = Manifold_EM(Toymd, 2, 4, 4, 2, 3, 5)# run the alg (min dist with their neighbors)
 Toyplots2 = TEplot(Toy, Toymd, Toymerge2)
 Toyplots2$O2
-Toyplots2$clus
-ters
+Toyplots2$clusters
 Toyplots2$initg
 
 Toymerge3 = Manifold_EM(Toymd, 2, 4, 4, 2, 4, 5)# run the alg (max dist with their neighbors)
