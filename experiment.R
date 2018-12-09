@@ -4,7 +4,7 @@ require(ggplot2)
 require('Rcpp')
 require(mclust)
 require(scatterplot3d)
-requre(fcd)
+require(fcd)
 sourceCpp('manifoldEM.cpp')
 
 ##Read Data
