@@ -1,20 +1,28 @@
 require('dbscan')
 require(igraph)
 require(Rcpp)
-sourceCpp('manifoldEMmod.cpp')
+sourceCpp('manifoldEM.cpp')
 sourceCpp('nnrank.cpp')
 sourceCpp('ccdist.cpp')
 sourceCpp('geodist.cpp')
 sourceCpp('nnrank_merge.cpp')
 
-Manifold_EM = function(manifold_data, n_manifolds, knns, categories,max_iter){
+Manifold_EM = function(manifold_data, n_manifolds, knns, categories, max_iter, method, thresh){
   g = graph_construction(manifold_data, knns)
   
   nnrank = sigpointsampling(g$knns$id)
-  initp = initialpointsamp(g$knns$id,nnrank,categories)
-  geodist = geodist(g$g)
+  gdm = gdmgenerator(g$g)#geodesic distance matrix generator
+  if (method == 1){
+    initp = initialpointsamp(g$knns$id,nnrank,categories)
+    # greedy nn-rank
+  }
+  else{
+    initp = IPwithmerge(g$knns$id, gdm, nnrank, categories, thresh)
+    # with node merge method
+  }
+  
   cats = list();
-  cats$cate = cats_EM(geodist,initp,n_manifolds,categories,max_iter)
+  cats$cate = cats_EM(gdm,initp,n_manifolds,categories,max_iter)
   cats$initials = initp
   return(cats)
 }
@@ -25,7 +33,7 @@ graph_construction = function(manifold_data, knns){
     add_vertices(nrow(manifold_data)) 
   for(i in 1:nrow(manifold_data)){
     for(j in 1:knns){
-      g = g+edges(c(i,knng$id[i,j]),weight = knng$dist[i,j])
+      g = g+edges(c(i,knng$id[i,j]), weight = knng$dist[i,j])
     }
   }
   graph_info = list()
@@ -34,13 +42,13 @@ graph_construction = function(manifold_data, knns){
   return(graph_info)
 }
 
-geodist = function(g){
+gdmgenerator = function(g){
   ccs = clusters(g)
   if (ccs$no == 1){
-    geodist = distances(g,v=V(g),to = V(g),mode ='all',algorithm = 'dijkstra')
+    gdm = distances(g,v=V(g),to = V(g),mode ='all', algorithm = 'dijkstra')
   }
   else{
-    pathdist = distances(g,v=V(g),to = V(g),mode ='all',algorithm = 'dijkstra')
+    pathdist = distances(g,v=V(g),to = V(g),mode ='all', algorithm = 'dijkstra')
     l2dist = as.matrix(dist(manifold_data,method = 'euclidean'))
     ccdis = matrix(vector(length = (ccs$no)^2),ccs$no, ccs$no)
     ccrep = matrix(vector(length = (ccs$no)^2),ccs$no, ccs$no)
@@ -55,7 +63,7 @@ geodist = function(g){
       }
     }
     ccdis = ccdis + t(ccdis)
-    geodist = geodist(pathdist,l2dist,ccdis,ccrep,ccs$membership)
+    gdm = geodist(pathdist,l2dist,ccdis,ccrep,ccs$membership)
   }
-  return(geodist)
+  return(gdm)
 }
