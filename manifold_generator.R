@@ -75,13 +75,19 @@ pathdist = distances(g,v=V(g),to = V(g),mode ='all',algorithm = 'dijkstra')
 cats = cats_EM(pathdist,c(100,300,500,700),3,4,5)
 #cats = cats_EM(pathdist,c(25,70,120),3,3,5)
 ggplot()+
-  geom_point(aes(x = as.vector(xall[which(cats==0),1]),y = as.vector(xall[which(cats ==0),2]), color = 'red'))+
+  geom_point(aes(x = as.vector(xall[which(cats ==0),1]),y = as.vector(xall[which(cats ==0),2]), color = 'red'))+
   geom_point(aes(x = as.vector(xall[which(cats == 1),1]),y = as.vector(xall[which(cats == 1),2]), color = 'green'))+
   geom_point(aes(x = as.vector(xall[which(cats == 2),1]),y = as.vector(xall[which(cats == 2),2]), color = 'blue'))+
   geom_point(aes(x = as.vector(xall[which(cats == 3),1]),y = as.vector(xall[which(cats == 3),2]), color = 'yellow'))+
   xlim(-5,5)+
   ylim(-5,5)
 
+ggplot()+
+  geom_point(aes(x = as.vector(xall[c(aaa$initials)+1,1]),y = as.vector(xall[c(aaa$initials)+1,2]), color = 'initials'),shape = 25, fill = 'red',size= 1.55)+
+  geom_point(aes(x = as.vector(xall[-(c(aaa$initials)+1),1]),y = as.vector(xall[-(c(aaa$initials)+1),2])),size = 0.45)+
+  xlim(-5,5)+
+  ylim(-5,5)
+  
 ##EM Clustering 
 fit_em = Mclust(manifold_data,G=4)
 cats_std = fit_em$classification
@@ -117,6 +123,3 @@ ggplot()+
 
 ## check the true percentage of each cluster
 # summary(as.factor(origin.data == cats))
-
-
-
