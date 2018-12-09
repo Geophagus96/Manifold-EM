@@ -5,6 +5,7 @@ sourceCpp('manifoldEMmod.cpp')
 sourceCpp('nnrank.cpp')
 sourceCpp('ccdist.cpp')
 sourceCpp('geodist.cpp')
+sourceCpp('nnrank_merge.cpp')
 
 Manifold_EM = function(manifold_data, n_manifolds, knns, categories,max_iter){
   g = graph_construction(manifold_data, knns)
