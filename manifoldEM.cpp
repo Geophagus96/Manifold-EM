@@ -56,7 +56,7 @@ uvec cats_EM(const mat&dist, const uvec&initials, const int & manifolds, const i
   int n = dist.n_cols;
   uvec cats = nnc(dist.rows(initials));
   vec proportions(categories, fill::ones);
-  /*proportions = 0.25*proportions;*/
+  proportions = 0.25*proportions;
   uvec centers = initials;
   vec sigmas(categories,fill::ones);
   for (int j = 0; j<max_iter; j++){
@@ -70,15 +70,15 @@ uvec cats_EM(const mat&dist, const uvec&initials, const int & manifolds, const i
     }
     mat subdist = dist.cols(centers);
     vec denominator = 1/pow(sigmas,(manifolds/2));
-    mat likelihood = exp(-0.5*subdist*diagmat(denominator))*diagmat(denominator)/*diagmat(10*proportions)*/;
+    mat likelihood = exp(-0.5*subdist*diagmat(denominator))*diagmat(denominator)*diagmat(10*proportions);
     for (int i=0; i<n; i++){
       uvec cat = find(likelihood.row(i) == max(likelihood.row(i)));
       cats(i) = cat(0);
     }
-    /*for (int h = 0 ;h < categories; h++){
+    for (int h = 0 ;h < categories; h++){
     uvec sumi = find(cats == h);
-    proportions(h) = sumi.n_elem/double(n);    }
-}*/
-    }  
-  return cats;
+    proportions(h) = sumi.n_elem/double(n);    
+    }
   }  
+  return cats;
+}  
