@@ -1,0 +1,62 @@
+\documentclass{article}
+\title{EMmanifold}
+\author{Yuze Zhou}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{algorithm2e}
+\usepackage{algorithmicx}
+\begin{document}
+\section{EM Algorithm on Manifolds}
+\subsection{Assumptions}
+\paragraph{}Suppose the data are scattered in $k$ different clusters on a $d$-manifold, and for each cluster $i$, they are generated from a geodesic Gaussian distribution with the pdf:\\
+\begin{center}
+$f_{i}(x) \propto \frac{1}{\sigma_{i}^{d}}e^{-\frac{d_{G}^{2}(x,\mu_{i})}{d\sigma_{i}^{2}}}$
+\end{center}
+where $\mu_{i}$ denotes the mean of the distribution, $\sigma_{i}^{2}$ as the variance and $d_{G}(x,y)$ denotes the corresponding geodesic distance between two points $x$ and $y$ on the manifold.
+\subsection{Algorithms}
+\paragraph{}Given $N$ data points setteled on the underlying manifold, and $K$ different clusters are assumed on it. Moreoevr, suppose we have can well represent the geodesic distance between any two arbitrary data points $x$ and $x'$ on the manifold, $d_{G}(x,x')$, our EM algorithm is designed as such:\\
+\begin{center}
+\begin{algorithm}[H]
+\caption{EM for Manifold Clustering}
+\textbf{Initialize $K$ different centers $\mu_{1}, \cdots \mu_{k}$ selected from all $N$ data points}\\
+\textbf{E-Step}\\
+for $j=1,2,\cdots,n$\\
+\begin{enumerate}
+\item $assign \quad the \quad cluster \quad label \quad y_{j} = \arg\min\limits_{1 \leq j \leq k} \frac{1}{(\sigma_{i}^{2})^{\frac{d}{2}}} e^{-\frac{d_{G}^{2}(x_{j},\mu_{i})}{d\sigma_{i}^{2}}}$
+\end{enumerate}
+\textbf{M-Step}\\
+for $i=1,2,\cdots,k$\\
+\begin{enumerate}
+  \item $\pi_{i} = \frac{|C_{i}|}{\sum\limits_{j=1}^{k}|C_{j}|}$
+  \item $\mu_{i} = \arg\min\limits_{x \in C_{i}} \sum\limits_{x_{j} \in C_{i}}d_{G}^{2}(x,x_{j})$
+  \item $\sigma_{i}^{2} = \frac{\sum\limits_{x_{j} \in C_{i}}d_{G}^{2}(x_{j},\mu_{i})}{|C_{i}|}$
+\end{enumerate}
+\end{algorithm}
+\end{center}
+\subsection{Ways for Constructing Geodesic Distance}
+\paragraph{}In my implementation of the algorithm, we have constructed the geodesic distance by first constructing a k-nearest neighbour graph or an $\epsilon$-neighbour graph where the corresponding weights of the edges of the graph is their Euclidean distance and then replacing the pairwise geodesic distances by the shortest path.
+\section{Experimental Results}
+\subsection{Example One}
+\paragraph{}The data points were first generated from four clusters on a $2$-dimensional space as such:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{lclorigin.png}
+  \caption{Manifold Data Before Folded}
+\end{figure}
+\paragraph{}Then all data points on the $2$-dimensional space is then folded into a $2$-manifolds in a $3$-dimensional Euclidean space and adding a Gaussian noise, which looks like:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{lclmani.png}
+  \caption{Manifold Data After Folded}
+\end{figure}
+\paragraph{}Then we conducted both the traditional EM algorithm and the manifold EM algorithm to cluster the manifold data points, and the following results are:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.45\textwidth]{lclem.png}
+  \includegraphics[width=0.45\textwidth]{lclmfem.png}
+  \caption{Left: Clustering Result of EM; Right: Clustering Result of Manifold EM}
+\end{figure}
+\end{document} 
