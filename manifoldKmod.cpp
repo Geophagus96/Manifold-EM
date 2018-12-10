@@ -4,6 +4,7 @@
 
 using namespace Rcpp;
 using namespace arma;
+/*The new modified EM algorithm is adjusted for the number of clusters*/
 
 //[[Rcpp::plugins(cpp11)]]
 /*Since my Rcpp package is an old version, it only supports cpp11. If you are using the latest Rcpp version please change the cpp plugin to cpp14*/
